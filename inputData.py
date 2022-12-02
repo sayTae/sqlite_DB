@@ -29,12 +29,12 @@ def SAVE_OR_NOT():
 
         if res == "Y" or res == "y":
             con.commit()
-            print(f"커밋 완료", "\n")
+            print(f"커밋 완료.", "\n")
             con.close()
             break;
     
         elif res == "N" or res == "n":
-            print(f"저장하지 않음", "\n")
+            print(f"저장하지 않음.", "\n")
             con.close()
             break;
  
@@ -134,48 +134,62 @@ def show_Table_names():
     for r in cur.fetchall():
         cnt +=1
         r_ = str(r).replace('(', '').replace(',)', '').replace("'", '')
+        print("||", r_)
+        r_dic[cnt] = r_
+    print('')
+
+def show_Table_names_select():
+    os.system('cls')
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    global r_dic
+    r_dic = {}
+    cnt = 0
+    for r in cur.fetchall():
+        cnt +=1
+        r_ = str(r).replace('(', '').replace(',)', '').replace("'", '')
         print("||", r_, f'[{cnt}]')
         r_dic[cnt] = r_
     print('')
     
 show_Table_names()
-
-print("[1] table 추가/삭제" +'  '+ "[2] row 추가/삭제")
+print("[1] table 추가/삭제" +'  '+ "[2] row 추가/삭제", "\n")
 tesk_num = input("접근할 번호를 입력해주세요: ")
 
 if tesk_num == '1':
     show_Table_names()
-    print("[1] table 추가" +'  '+ "[2] table 삭제")
+    print("[1] table 추가" +'  '+ "[2] table 삭제", "\n")
     tesk_Num = input("접근할 번호를 입력해주세요: ")
     print('')
     
     if tesk_Num == '1':
         show_Table_names()
-        Name = input("\n"+"추가할 테이블 이름을 입력하세요: ")
+        Name = input("추가할 테이블 이름을 입력하세요: ")
         add_table(Name)
-        
+        show_Table_names_select()
         print(f"table: [{Name}] 이 추가 되었습니다", "\n")
         SAVE_OR_NOT()
+        exit()
     
     while(True):
         if tesk_Num == '2':
-            show_Table_names()
+            show_Table_names_select()
             Table_Num = int(input("삭제할 Table 번호를 입력하세요: "))
             Table_Name = r_dic[Table_Num]
             try:
                 del_table(Table_Name)
                 SAVE_OR_NOT()
+                exit()
             except:
                 print("테이블을 찾을 수 없습니다.", "\n")
 
 if tesk_num == '2':
-    show_Table_names()
+    show_Table_names_select()
     Table_Num = int(input("접근할 Table 번호를 입력하세요: "))
     Table_Name = r_dic[Table_Num]
 
     while(True):
         show_Table_info()
-        print("[1] row 추가" +'  '+ "[2] row 삭제")
+        print("[1] row 추가" +'  '+ "[2] row 삭제", "\n")
         tesk_Num = input("접근할 번호를 입력해주세요: ")
         print('')
 
@@ -184,8 +198,10 @@ if tesk_num == '2':
             print("추가할 내용을 입력하세요.", "(마침: 제품 코드란에 기입하지 않고 Enter)", "\n")
             add_row()
             SAVE_OR_NOT()
+            exit()
 
         elif tesk_Num == '2':
             del_Num = input("삭제할 모델 번호를 입력해주세요: ")
             del_row(del_Num)
             SAVE_OR_NOT()
+            exit()
