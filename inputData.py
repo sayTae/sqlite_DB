@@ -70,21 +70,6 @@ def add_row():
             print("Error: 오류가 발생했습니다.")
             print(f"예상: {Table_Name} 존재하지 않을 가능성이 있습니다.")
             break;
-        
-        # show_Table_info()
-        
-        # while(True):
-        #     ismore = input("더 추가하시겠습니까? <Y/N>: ")
-            
-        #     if ismore == 'Y' or ismore == 'y':
-        #         break;
-            
-        #     elif ismore == 'N' or ismore == 'n':
-        #         end = True;
-                
-        #     else:
-        #         print("선택을 바르게 입력해주세요.")
-        #         continue;
     
 def del_row(res):
     while(True):
