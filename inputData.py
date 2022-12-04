@@ -10,9 +10,7 @@ data1, data2, data3, data4 = "","","",""
 sql = ""
 
 ## 함수 ##
-def show_Table_info():
-    os.system("cls")
-    
+def show_Table_info(): 
     cur.execute(f"SELECT sql FROM sqlite_master WHERE tbl_name='{Table_Name}' ")
     
     for r in cur.fetchall():
@@ -93,6 +91,7 @@ def del_row(res):
         if res != '':
             del_select = f"DELETE FROM {Table_Name} WHERE pCode = '"+ res +"' "
             cur.execute(del_select)
+            os.system('cls')
             show_Table_info()  
             input(f"{del_Num}: 삭제가 완료되었습니다! (Enter)")
             break;
@@ -150,33 +149,37 @@ cur = con.cursor()
 
 ## 어쩔 수 없이 안에 만든 함수 ##
 def show_Table_names(): # 테이블 목록 보여주는 함수
-    os.system('cls')
     cur.execute("SELECT tbl_name FROM sqlite_master")
     global r_dic
     r_dic = {}
     cnt = 0
+    print('--------------------------------------------------')
     for r in cur.fetchall():
         cnt +=1
         r_ = str(r).replace('(', '').replace(',)', '').replace("'", '')
         print("||", r_)
         r_dic[cnt] = r_
+    print('--------------------------------------------------')
     print('')
 
 ## 어쩔 수 없이 안에 만든 함수_2 ##
 def show_Table_names_select():  # 테이블 목록 보여주는 함수 (+인덱싱)
-    os.system('cls')
     cur.execute("SELECT tbl_name FROM sqlite_master")
-    global r_dic
+    global r_di
     r_dic = {}
     cnt = 0
+    print('--------------------------------------------------')
     for r in cur.fetchall():
         cnt +=1
         r_ = str(r).replace('(', '').replace(',)', '').replace("'", '')
         print("||", r_, f'[{cnt}]')
         r_dic[cnt] = r_
-    print("\n" + "=> Move_Back [0]" + "\n")
+    print('--------------------------------------------------')
+    print("                                          뒤로 [0]", "\n")
     
 while(True):    # 프로그램이 끝날 때까지 계속 반복
+    os.system('cls')
+    print("                    <작업 선택>", "\n")
     show_Table_names()  # 테이블 이름 보여주고,
     print("[1] table 추가/삭제" +' | '+ "[2] row 추가/삭제" +' | '+ "[0] 종료", "\n")   # 목록에서 선택 유도
     tesk = input("접근할 번호를 입력해주세요: ")    # 인풋 받고,
@@ -185,6 +188,8 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
     if tesk == '1': # 만약 1번 테스크라면,
         
         while(True): # 계속 반복
+            os.system("cls")
+            print("                 <Table 추가/삭제>", "\n")
             show_Table_names()  # 테이블 보여주기
             print("[1] table 추가" +' | '+ "[2] table 삭제" +' | '+ "[0] 이전으로", "\n")   # 목록에서 선택 유도
             tesk_Num = input("접근할 번호를 입력해주세요: ")    # 인풋 받기
@@ -193,15 +198,17 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
             ## table 추가 ##
             if tesk_Num == '1': # 1번 테스크에서 1번 작업이라면,
                 while(True): # 계속 반복
-                    
+                    os.system("cls")
+                    print("                    <Table 추가>", "\n")
                     show_Table_names()
-                    print("=> Move_Back [0]", "\n")
+                    print("                                          뒤로 [0]", "\n")
                     print("|| Table 추가 시도중...", "\n")# 테이블 목록 보여주고
                     Name = input("추가할 테이블 이름을 입력하세요: ") # 테이블 이름 입력 받기
                     
                     if Name != '0':
                         try:
                             add_table(Name) # 테이블 만드는 함수
+                            print("<Table 추가 완료!>")
                             show_Table_names()  # 업데이트 된 테이블 보여주기
                             print(f"table: [{Name}] 이 추가 되었습니다", "\n")  # 추가 된 테이블 이름 출력
                         except:
@@ -212,7 +219,8 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
             ## table 삭제 ##
             if tesk_Num == '2': # 1번 테스크에서 2번 작업이라면,
                 while(True): # 계속 반복
-                    
+                    os.system('cls')
+                    print("                    <Table 삭제>)", "\n")
                     show_Table_names_select()   # 테이블 목록 보여주고 (+인덱싱),
                     
                     Table_Num = int(input("삭제할 Table 번호를 입력하세요: "))  # 인풋 받기
@@ -253,6 +261,8 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
     ### row ###
     elif tesk == '2': # 만약 2번 테스크라면,
         while(True):
+            os.system('cls')
+            print("                    <Table 선택>", "\n")
             show_Table_names_select()   # 테이블 목록 보여주기 (+인덱싱)
             Table_Num = int(input("접근할 Table 번호를 입력하세요: "))  # 인풋 받고,
             
@@ -262,6 +272,7 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
             Table_Name = r_dic[Table_Num]   # 인풋을, 변수에 테이블 이름으로 저장
                 
             while(True): # 무한 반복
+                os.system('cls')
                 show_Table_info()   # 테이블 row 목록 보여주고,
                 print("[1] row 추가" +' | '+ "[2] row 삭제" +' | '+ "[0] 이전으로", "\n")   # 목록에서 선택 유도
                 tesk_Num = input("접근할 번호를 입력해주세요: ")    # 인풋 받고,
@@ -279,9 +290,10 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 ## row 삭제 ##
                 elif tesk_Num == '2':   # 만약 인풋이 2라면,
                     while(True): # 무한 반복
-                        
+                        os.system('cls')
+                        print("                    <row 번호 선택>)", "\n")
                         show_Table_info()
-                        print("\n" + "=> Move_Back [0]" + "\n")
+                        print("                                          뒤로 [0]", "\n")
                         del_Num = input("삭제할 모델 번호를 입력해주세요: ")
                         
                         if del_Num != '0':
