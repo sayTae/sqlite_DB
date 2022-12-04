@@ -11,11 +11,10 @@ sql = ""
 
 ## 함수 ##
 def show_Table_info(): 
-    cur.execute(f"SELECT sql FROM sqlite_master WHERE tbl_name='{Table_Name}' ")
+    get_field(Table_Name)
     
-    for r in cur.fetchall():
-        r_ = str(r).replace(Table_Name, f'{Table_Name} ').replace('("CREATE TABLE ', '').replace('",)', '').replace(", ", ' || ').replace("             ", '')
-        print(r_)
+    print('')
+    print("||", field1, "||", field2, "||", field3, "||", field4,"                   table: <"+Table_Name+">")
 
     cur.execute(f"SELECT * FROM {Table_Name}")
     print("-------------------------------------------------------------------------------")
@@ -24,7 +23,7 @@ def show_Table_info():
         for row in rows:
             print(row, end=" || ")
         print('')
-    print('')
+    print("-------------------------------------------------------------------------------")
     
     
 def SAVE_OR_NOT():
@@ -46,22 +45,47 @@ def SAVE_OR_NOT():
             continue;
     return 0;
 
-def add_row():
+
+def get_field(table_Name):
+        rr_dic = {}
+        cnt = 0
+        cur.execute(f"PRAGMA table_info({table_Name})")
+        for rows in cur.fetchall():
+            rr = str(rows).replace(", '', 0, None, 0)", '').replace("'", '').replace("(0, ", '').replace("(1, ", '').replace("(2, ", '').replace("(3, ", '')
+            rs = rr.split(' ')
+            rr_dic[cnt] = rs
+            cnt +=1
+
+        global field1; global field2; global field3; global field4; global field1_type;
+        
+        field1 = str(rr_dic[0][0]).replace(",", '')
+        field2 = str(rr_dic[1][0]).replace(",", '')
+        field3 = str(rr_dic[2][0]).replace(",", '')
+        field4 = str(rr_dic[3][0]).replace(",", '')
+        field1_type = str(rr_dic[0][1])
+
+def add_row(table_Name):
     while (True):
         os.system('cls')
         show_Table_info()   # 업데이트 된 테이블 row 목록 보여주기
         
         print("추가할 내용을 입력하세요.", "(마침: 제품 코드란에 기입하지 않고 Enter)", "\n") # 인풋 받고,
         
-        data1 = input("제품 코드 ==> ")
+        # -------------------------------------------------------------
+        get_field(table_Name)
+
+        # # -------------------------------------------------------------
+
+        
+        data1 = input(f"{field1} ==> ")
         
         if data1 == '':
             print("제품 입력이 완료되었습니다.", "\n")
             break;
-    
-        data2 = input("제품명 ==> ")
-        data3 = input("가격 ==> ")
-        data4 = input("제품 개수 ==> ")
+        
+        data2 = input(f"{field2} ==> ")
+        data3 = input(f"{field3} ==> ")
+        data4 = input(f"{field4} ==> ")
         try:
             sql = f"INSERT INTO {Table_Name} VALUES( \
                 '"+ data1 +"', '"+ data2 +"', '"+ data3 +"', '"+ data4 +"')"
@@ -71,14 +95,14 @@ def add_row():
             print(f"예상: {Table_Name} 존재하지 않을 가능성이 있습니다.")
             break;
     
-def del_row(res):
+def del_row(del_row_name):
     while(True):
-        if res != '':
-            del_select = f"DELETE FROM {Table_Name} WHERE pCode = '"+ res +"' "
+        if del_row_name != '':
+            del_select = f"DELETE FROM {Table_Name} WHERE {field1} = '"+ del_row_name +"' "
             cur.execute(del_select)
             os.system('cls')
             show_Table_info()  
-            input(f"{del_Num}: 삭제가 완료되었습니다! (Enter)")
+            input(f"{del_row_name}: 삭제가 완료되었습니다! (Enter)")
             break;
 
         # elif del_Num == "all kill":
@@ -91,11 +115,11 @@ def del_row(res):
         
 def add_table(table_Name):
     
-    field_dic = {}
+    make_field_dic = {}
     
     for n in range(4):
         os.system('cls')
-        print("type =>  NULL-[0]  INTEGER-[1]  TEXT-[2]  BLOB-[3]", "\n")
+        print("\n" + "  NULL-[0]  INTEGER-[1]  TEXT-[2]  BLOB-[3]", "\n")
         field_name = input(f"{n+1}번째 필드 이름 ==> ")
         field_type = input(f"{n+1}번째 필드 type ==> ")
         print('')
@@ -109,16 +133,15 @@ def add_table(table_Name):
         elif field_type == '3':
             field_type = 'BLOB'
         
-        field_dic[n] = field_name +' '+ field_type
+        make_field_dic[n] = field_name +' '+ field_type
     
-    var1 = field_dic[0]
-    var2 = field_dic[1]
-    var3 = field_dic[2]
-    var4 = field_dic[3]
+    var1 = make_field_dic[0]
+    var2 = make_field_dic[1]
+    var3 = make_field_dic[2]
+    var4 = make_field_dic[3]
     
     try:
-        sql = f"CREATE TABLE {table_Name}( \
-            '"+ var1 +"', '"+ var2 +"', '"+ var3 +"', '"+ var4 +"')"
+        sql = f"CREATE TABLE {table_Name}("+ var1 +", "+ var2 +", "+ var3 +", "+ var4 +")"
         cur.execute(sql)
     except:
         print("Error: 오류가 발생했습니다.")
@@ -265,31 +288,33 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 
                 ## row 추가 ##
                 if tesk_Num == '1': # 만약 인풋이 1이라면,
-                    try:
-                        add_row()   # row 추가 함수     
-                    except:
-                        print("Error: 오류가 발생했습니다.")    # 오류 메시지
-                    else:
-                        break;
+                    while(True):
+                        try:
+                            add_row(Table_Name)   # row 추가 함수     
+                        except:
+                            print("Error: 오류가 발생했습니다.")    # 오류 메시지
+                        else:
+                            break;
 
                 ## row 삭제 ##
                 elif tesk_Num == '2':   # 만약 인풋이 2라면,
                     while(True): # 무한 반복
                         os.system('cls')
-                        print("                    <row 번호 선택>)", "\n")
+                        print("                    <삭제할 row 선택>", "\n")
                         show_Table_info()
                         print("                                          뒤로 [0]", "\n")
-                        del_Num = input("삭제할 모델 번호를 입력해주세요: ")
+                        get_field(Table_Name)
+                        del_row_name = input(f"삭제할 [{field1}] 값을(를) 입력해주세요: ")
                         
-                        if del_Num != '0':
+                        if del_row_name != '0':
                             
                             while(True):
-                                YESorNO = input(f"'{del_Num}'을(를) 삭제 하시겠습니까? <Y/N>: ")
+                                YESorNO = input(f"'{del_row_name}'을(를) 삭제 하시겠습니까? <Y/N>: ")
                                 print('')
                                 
                                 if YESorNO == "Y" or YESorNO == 'y':
                                     try:
-                                        del_row(del_Num)   # row 삭제 함수
+                                        del_row(del_row_name)   # row 삭제 함수
                                         break;
                                     except:
                                         print("Error: 오류가 발생했습니다.", "\n")  # 오류 메시지
