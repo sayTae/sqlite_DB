@@ -195,7 +195,7 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
     ### table ###
     if tesk == '1': # 만약 1번 테스크라면,
         
-        while(True): # 계속 반복
+        #  while(True):계속 반복
             os.system("cls")
             print("                 <Table 추가/삭제>", "\n")
             show_Table_names()  # 테이블 보여주기
@@ -234,8 +234,12 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                     Table_Num = int(input("삭제할 Table 번호를 입력하세요: "))  # 인풋 받기
                     
                     if Table_Num != 0:
-                        Table_Name = r_dic[Table_Num]   # 인풋을, 변수에 테이블 이름으로 저장
-                    
+                        try:
+                            Table_Name = r_dic[Table_Num]   # 인풋을, 변수에 테이블 이름으로 저장
+                        except:
+                            input("다시 입력해주세요. (Enter)")
+                            continue;
+                            
                         while(True):
                             YESorNO = input(f"'{Table_Name}'을(를) 삭제 하시겠습니까? <Y/N>: ")
                             print('')
@@ -277,7 +281,11 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
             if Table_Num == 0:
                 break;
             
-            Table_Name = r_dic[Table_Num]   # 인풋을, 변수에 테이블 이름으로 저장
+            try:
+                Table_Name = r_dic[Table_Num]   # 인풋을, 변수에 테이블 이름으로 저장
+            except:
+                input("다시 입력해주세요. (Enter)")
+                continue;
                 
             while(True): # 무한 반복
                 os.system('cls')
@@ -343,7 +351,6 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 break;
             else:
                 print("Warning: 작업할 인덱스를 다시 입력해주세요")
-                continue;
     
     ### End ###
     elif tesk == '0': # 만약 3번 테스크라면,
