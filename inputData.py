@@ -57,23 +57,15 @@ def get_field(table_Name):
             rr_dic[cnt] = rs
             cnt +=1
 
-        global field1; global field2; global field3; global field4; global ress;
+        global field1; global field2; global field3; global field4;
         
-        field1 = str(rr_dic[0][0]).replace(",", '')
-        field2 = str(rr_dic[1][0]).replace(",", '')
-        field3 = str(rr_dic[2][0]).replace(",", '')
-        field4 = str(rr_dic[3][0]).replace(",", '')
-        
-        ress = rr_dic
+        for i in range(1,5):
+            globals()['field'+str(i)] = str(rr_dic[i-1][0]).replace(",", '')
         
         for i in range(1,5):
             globals()['field'+str(i)+'_type_noparsing'] = str(rr_dic[i-1][1])
             
-        # field1_type = str(rr_dic[0][1])
-        # field2_type = str(rr_dic[1][1])
-        # field3_type = str(rr_dic[2][1])
-        # field4_type = str(rr_dic[3][1])
-        
+            
         for i in range(1,5):
             if ('char' in globals()['field'+str(i)+'_type_noparsing']) or ('TEXT' in globals()['field'+str(i)+'_type_noparsing']):
                 globals()['field'+str(i)+'_type'] = str
