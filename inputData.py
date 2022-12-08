@@ -189,7 +189,7 @@ def add_table(table_Name):
     
     for n in range(4):
         os.system('cls')
-        print("\n" + "  NULL-[0]  INTEGER-[1]  TEXT-[2]  BLOB-[3]", "\n")
+        print("\n" + "  INTEGER-[1]  TEXT-[2]", "\n")
         field_name = input(f"{n+1}번째 필드 이름 ==> ")
         field_type = input(f"{n+1}번째 필드 type ==> ")
         print('')
