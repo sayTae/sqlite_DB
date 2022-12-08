@@ -47,6 +47,7 @@ def SAVE_OR_NOT():
 
 
 def get_field(table_Name):
+        global rr_dic;
         rr_dic = {}
         cnt = 0
         cur.execute(f"PRAGMA table_info({table_Name})")
@@ -56,13 +57,32 @@ def get_field(table_Name):
             rr_dic[cnt] = rs
             cnt +=1
 
-        global field1; global field2; global field3; global field4; global field1_type;
+        global field1; global field2; global field3; global field4; global ress;
         
         field1 = str(rr_dic[0][0]).replace(",", '')
         field2 = str(rr_dic[1][0]).replace(",", '')
         field3 = str(rr_dic[2][0]).replace(",", '')
         field4 = str(rr_dic[3][0]).replace(",", '')
-        field1_type = str(rr_dic[0][1])
+        
+        ress = rr_dic
+        
+        for i in range(1,5):
+            globals()['field'+str(i)+'_type_noparsing'] = str(rr_dic[i-1][1])
+            
+        # field1_type = str(rr_dic[0][1])
+        # field2_type = str(rr_dic[1][1])
+        # field3_type = str(rr_dic[2][1])
+        # field4_type = str(rr_dic[3][1])
+        
+        for i in range(1,5):
+            if ('char' in globals()['field'+str(i)+'_type_noparsing']) or ('TEXT' in globals()['field'+str(i)+'_type_noparsing']):
+                globals()['field'+str(i)+'_type'] = str
+                globals()['field'+str(i)+'_type_name'] = 'str'
+                
+            elif ('int' in globals()['field'+str(i)+'_type_noparsing']) or ('INTEGER' in globals()['field'+str(i)+'_type_noparsing']):
+                globals()['field'+str(i)+'_type'] = int
+                globals()['field'+str(i)+'_type_name'] = 'int'
+                
 
 def add_row(table_Name):
     while (True):
@@ -75,17 +95,94 @@ def add_row(table_Name):
         get_field(table_Name)
 
         # # -------------------------------------------------------------
+        
+        # cur.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '"+Table_Name+"' ")
+        # tbl_schema = str(cur.fetchone())
+        # print(tbl_schema)
+        # input("----안전선----")
+        # parsing1 = tbl_schema.split(f"{Table_Name} (")
+        # parsing2 = parsing1[1].split(")',)")
+        # parsing3 = parsing2[0].split(", ")
+                            
+        # field_type_li = []
+        # for field in parsing3:
+        #     field_type = field.split(' ')[1]
+        #     field_type_li.append(field_type)
+    
+        # input("----안전선----")
+        # # -------------------------------------------------------------
 
+        while(True):
+            data1 = input(f"{field1}({field1_type_name}) ==> ")
+            data1_type = str(data1).isdigit()
+            
+            if data1_type == True:
+                data1_type = 'int'
+            else:
+                data1_type = 'str'
+
+            if data1_type == field1_type_name:
+                break;
+            
+            elif data1 == '':
+                print("제품 입력이 완료되었습니다.", "\n")
+                break;
+            
+            else: 
+                print(data1_type, field1_type_name)
+                input("알맞은 형태의 값을 넣어주세요. (Enter)")
+                continue
         
-        data1 = input(f"{field1} ==> ")
-        
-        if data1 == '':
-            print("제품 입력이 완료되었습니다.", "\n")
-            break;
-        
-        data2 = input(f"{field2} ==> ")
-        data3 = input(f"{field3} ==> ")
-        data4 = input(f"{field4} ==> ")
+       # -------------------------------------------------------------     
+        while(True):
+            data2 = input(f"{field2}({field2_type_name}) ==> ")
+            data2_type = str(data2).isdigit()
+            
+            if data2_type == True:
+                data2_type = 'int'
+            else:
+                data2_type = 'str'
+
+            if data2_type == field2_type_name:
+                break;            
+            else: 
+                print(data2_type, field2_type_name)
+                input("알맞은 형태의 값을 넣어주세요. (Enter)")
+                continue
+            
+        while(True):
+            data3 = input(f"{field3}({field3_type_name}) ==> ")
+            data3_type = str(data3).isdigit()
+            
+            if data3_type == True:
+                data3_type = 'int'
+            else:
+                data3_type = 'str'
+
+            if data3_type == field3_type_name:
+                break;            
+            else: 
+                print(data3_type, field3_type_name)
+                input("알맞은 형태의 값을 넣어주세요. (Enter)")
+                continue
+            
+        while(True):
+            data4 = input(f"{field4}({field4_type_name}) ==> ")
+            data4_type = str(data4).isdigit()
+            
+            if data4_type == True:
+                data4_type = 'int'
+            else:
+                data4_type = 'str'
+
+            if data4_type == field4_type_name:
+                break;
+            else: 
+                print(f"입력: {data1_type}, 필드: {field4_type_name}")
+                input("알맞은 형태의 값을 넣어주세요. (Enter)")
+                continue
+        # -------------------------------------------------------------
+            
         try:
             sql = f"INSERT INTO {Table_Name} VALUES( \
                 '"+ data1 +"', '"+ data2 +"', '"+ data3 +"', '"+ data4 +"')"
@@ -123,32 +220,34 @@ def add_table(table_Name):
         field_name = input(f"{n+1}번째 필드 이름 ==> ")
         field_type = input(f"{n+1}번째 필드 type ==> ")
         print('')
-    
-        if field_type == '0':
-            field_type = 'NULL'
-        elif field_type == '1':
+  
+        if field_type == '1':
             field_type = 'INTEGER'
         elif field_type == '2':
             field_type = 'TEXT'
-        elif field_type == '3':
-            field_type = 'BLOB'
         
         make_field_dic[n] = field_name +' '+ field_type
     
-    var1 = make_field_dic[0]
-    var2 = make_field_dic[1]
-    var3 = make_field_dic[2]
-    var4 = make_field_dic[3]
+    for i in range(4):
+        globals()['var' +str(i+1)] = make_field_dic[i]
     
     try:
-        sql = f"CREATE TABLE {table_Name}("+ var1 +", "+ var2 +", "+ var3 +", "+ var4 +")"
+        sql = f"CREATE TABLE {table_Name} ("+ var1 +", "+ var2 +", "+ var3 +", "+ var4 +")"
         cur.execute(sql)
+        
+        # dummy = "dummy"
+        # sql = f"INSERT INTO {table_Name} VALUES( \
+        #         '"+dummy+"','"+dummy+"','"+dummy+"','"+dummy+"')"
+        # cur.execute(sql)
+        
     except:
         print("Error: 오류가 발생했습니다.")
 
 def del_table(table_Name):
     sql = f'DROP TABLE {table_Name}'
     con.execute(sql)
+    
+    # select data, typeof(data) from table_Name;
 
 
 ## 메인 코드 ##
@@ -193,7 +292,7 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
     tesk = input("접근할 번호를 입력해주세요: ")    # 인풋 받고,
 
     ### table ###
-    if tesk == '1': # 만약 1번 테스크라면,
+    if tesk == '1': # 만약 1번 tesk라면,
         
         #  while(True):계속 반복
             os.system("cls")
@@ -204,7 +303,7 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
             print('')
         
             ## table 추가 ##
-            if tesk_Num == '1': # 1번 테스크에서 1번 작업이라면,
+            if tesk_Num == '1': # 1번 tesk에서 1번 작업이라면,
                 while(True): # 계속 반복
                     os.system("cls")
                     print("                    <Table 추가>", "\n")
@@ -215,20 +314,29 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                     
                     if Name != '0':
                         try:
-                            add_table(Name) # 테이블 만드는 함수
-                            print("<Table 추가 완료!>")
-                            show_Table_names()  # 업데이트 된 테이블 보여주기
-                            print(f"table: [{Name}] 이 추가 되었습니다", "\n")  # 추가 된 테이블 이름 출력
+                            type = Name.isdigit()
+                            type2 = list(Name)[0].isdigit()
+                            
+                            if (type == False) and (type2 == False):    
+                                add_table(Name) # 테이블 만드는 함수
+                                print("<Table 추가 완료!>")
+                                show_Table_names()  # 업데이트 된 테이블 보여주기
+                                print(f"table: [{Name}] 이 추가 되었습니다", "\n")  # 추가 된 테이블 이름 출력
+                                
+                            else:
+                                input("테이블 이름을 문자열(str)로 입력해주세요. (Enter)")
+                                continue;
+                            
                         except:
                             print("테이블을 찾을 수 없습니다.", "\n")   # 오류 메시지
                     else:
                         break;
                     
             ## table 삭제 ##
-            if tesk_Num == '2': # 1번 테스크에서 2번 작업이라면,
+            if tesk_Num == '2': # 1번 tesk에서 2번 작업이라면,
                 while(True): # 계속 반복
                     os.system('cls')
-                    print("                    <Table 삭제>)", "\n")
+                    print("                    <Table 삭제>", "\n")
                     show_Table_names_select()   # 테이블 목록 보여주고 (+인덱싱),
                     
                     Table_Num = int(input("삭제할 Table 번호를 입력하세요: "))  # 인풋 받기
@@ -264,14 +372,14 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                     else:
                         break;
                               
-            ## 예외 처리 ##
-            if tesk_Num == '0':  # 만약 인풋이 0이라면,
-                break;  # 탈출
+                ## 예외 처리 ##
+                if tesk_Num == '0':  # 만약 인풋이 0이라면,
+                    break;  # 탈출
             else:
                 continue;
         
     ### row ###
-    elif tesk == '2': # 만약 2번 테스크라면,
+    elif tesk == '2': # 만약 2번 tesk라면,
         while(True):
             os.system('cls')
             print("                    <Table 선택>", "\n")
@@ -298,9 +406,34 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 if tesk_Num == '1': # 만약 인풋이 1이라면,
                     while(True):
                         try:
+                            # ------------------------------------------------
+                            # cur.execute("SELECT tbl_name FROM sqlite_master WHERE type = 'table' ")
+                            
+                            # cur.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '"+Table_Name+"' ")
+                            # tbl_schema = str(cur.fetchone())
+                            # print(tbl_schema)
+                            # input("----안전선----")
+                            # parsing1 = tbl_schema.split(f"{Table_Name} (")
+                            # parsing2 = parsing1[1].split(")',)")
+                            # parsing3 = parsing2[0].split(", ")
+                            
+                            # field_type_li = []
+                            # for field in parsing3:
+                            #     field_type = field.split(' ')[1]
+                            #     field_type_li.append(field_type)
+                            
+                            # print(field_type_li)
+                            
+                            get_field(Table_Name)
+                            
+                            # print(field1_type, field2_type, field3_type, field4_type)
+                            # print(field1_type_noparsing, field2_type_noparsing, field3_type_noparsing, field4_type_noparsing)
+                            # print(field1_type_name, field2_type_name, field3_type_name, field4_type_name)
+                            # input("----안전선----")
+                     
                             add_row(Table_Name)   # row 추가 함수     
                         except:
-                            print("Error: 오류가 발생했습니다.")    # 오류 메시지
+                            input("Error: 오류가 발생했습니다.")    # 오류 메시지
                         else:
                             break;
 
@@ -353,7 +486,15 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 print("Warning: 작업할 인덱스를 다시 입력해주세요")
     
     ### End ###
-    elif tesk == '0': # 만약 3번 테스크라면,
+    elif tesk == '0': # 만약 3번 tesk라면,
+        
+        # cur.execute("select sql from sqlite_master")
+        
+        # for rows in cur.fetchall():
+        #     for row in rows:
+        #         print(row, end=" || ")
+        # input("------안전선------")
+        
         SAVE_OR_NOT()   # 저장 할건지 말건지 함수
         
         print("모든 것을 마치고 종료합니다.")   # "모든 것을 마치고 종료한다" 알림
