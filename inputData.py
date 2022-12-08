@@ -91,26 +91,7 @@ def add_row(table_Name):
         
         print("추가할 내용을 입력하세요.", "(마침: 제품 코드란에 기입하지 않고 Enter)", "\n") # 인풋 받고,
         
-        # -------------------------------------------------------------
         get_field(table_Name)
-
-        # # -------------------------------------------------------------
-        
-        # cur.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '"+Table_Name+"' ")
-        # tbl_schema = str(cur.fetchone())
-        # print(tbl_schema)
-        # input("----안전선----")
-        # parsing1 = tbl_schema.split(f"{Table_Name} (")
-        # parsing2 = parsing1[1].split(")',)")
-        # parsing3 = parsing2[0].split(", ")
-                            
-        # field_type_li = []
-        # for field in parsing3:
-        #     field_type = field.split(' ')[1]
-        #     field_type_li.append(field_type)
-    
-        # input("----안전선----")
-        # # -------------------------------------------------------------
 
         while(True):
             data1 = input(f"{field1}({field1_type_name}) ==> ")
@@ -129,7 +110,7 @@ def add_row(table_Name):
                 break;
             
             else: 
-                print(data1_type, field1_type_name)
+                print(f"입력: {data1_type} | 필드: {field1_type_name}")
                 input("알맞은 형태의 값을 넣어주세요. (Enter)")
                 continue
         
@@ -406,32 +387,9 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 if tesk_Num == '1': # 만약 인풋이 1이라면,
                     while(True):
                         try:
-                            # ------------------------------------------------
-                            # cur.execute("SELECT tbl_name FROM sqlite_master WHERE type = 'table' ")
-                            
-                            # cur.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '"+Table_Name+"' ")
-                            # tbl_schema = str(cur.fetchone())
-                            # print(tbl_schema)
-                            # input("----안전선----")
-                            # parsing1 = tbl_schema.split(f"{Table_Name} (")
-                            # parsing2 = parsing1[1].split(")',)")
-                            # parsing3 = parsing2[0].split(", ")
-                            
-                            # field_type_li = []
-                            # for field in parsing3:
-                            #     field_type = field.split(' ')[1]
-                            #     field_type_li.append(field_type)
-                            
-                            # print(field_type_li)
-                            
                             get_field(Table_Name)
-                            
-                            # print(field1_type, field2_type, field3_type, field4_type)
-                            # print(field1_type_noparsing, field2_type_noparsing, field3_type_noparsing, field4_type_noparsing)
-                            # print(field1_type_name, field2_type_name, field3_type_name, field4_type_name)
-                            # input("----안전선----")
-                     
-                            add_row(Table_Name)   # row 추가 함수     
+                            add_row(Table_Name)   # row 추가 함수   
+                              
                         except:
                             input("Error: 오류가 발생했습니다.")    # 오류 메시지
                         else:
@@ -486,15 +444,7 @@ while(True):    # 프로그램이 끝날 때까지 계속 반복
                 print("Warning: 작업할 인덱스를 다시 입력해주세요")
     
     ### End ###
-    elif tesk == '0': # 만약 3번 tesk라면,
-        
-        # cur.execute("select sql from sqlite_master")
-        
-        # for rows in cur.fetchall():
-        #     for row in rows:
-        #         print(row, end=" || ")
-        # input("------안전선------")
-        
+    elif tesk == '0': # 만약 3번 tesk라면,        
         SAVE_OR_NOT()   # 저장 할건지 말건지 함수
         
         print("모든 것을 마치고 종료합니다.")   # "모든 것을 마치고 종료한다" 알림
