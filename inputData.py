@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-print("DB엔진 version: {0}"
+print("\n" + "DB엔진 version: {0}"
       .format(sqlite3.sqlite_version), "\n")
 
 ## 변수 선언 ##
@@ -88,6 +88,10 @@ def add_row(table_Name):
         while(True):
             data1 = input(f"{field1}({field1_type_name}) ==> ")
             data1_type = str(data1).isdigit()
+            
+            if data1 == '':
+                input("입력이 완료되었습니다. (Enter)")
+                return;
             
             if data1_type == True:
                 data1_type = 'int'
@@ -231,14 +235,24 @@ while(True):
     DB_Name = input("접근할 DB를 입력하세요: ")
     
     try:
-        con = sqlite3.connect(f"C:/sqlite/{DB_Name}")
-        break;
-    
+        if (os.path.exists(DB_Name)):
+            con = sqlite3.connect(f"C:/sqlite/{DB_Name}")
+            cur = con.cursor()
+            break;
+        
+        else:
+            print("존재하지 않는 DB입니다.")
+            YESorNO = input("새로 생성 하시겠습니까? (Y/N): ")
+            
+            if YESorNO == 'Y' or YESorNO == 'y':
+                con = sqlite3.connect(f"C:/sqlite/{DB_Name}")
+                cur = con.cursor()
+            else:
+                input("다시 입력해주세요. (Enter)")
+                continue;
+            
     except: 
-        input("존재하는 DB를 입력해주세요. (Enter)")
-        continue
-    
-cur = con.cursor()
+        continue;
 
 ## 어쩔 수 없이 안에 만든 함수 ##
 def show_Table_names(): # 테이블 목록 보여주는 함수
