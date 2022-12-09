@@ -224,7 +224,20 @@ def del_table(table_Name):
 
 
 ## 메인 코드 ##
-con = sqlite3.connect("C:/sqlite/naverDB")
+while(True):
+    DB_path = "C:/sqlite/DB_Name"
+    print(f"({DB_path})")
+    
+    DB_Name = input("접근할 DB를 입력하세요: ")
+    
+    try:
+        con = sqlite3.connect(f"C:/sqlite/{DB_Name}")
+        break;
+    
+    except: 
+        input("존재하는 DB를 입력해주세요. (Enter)")
+        continue
+    
 cur = con.cursor()
 
 ## 어쩔 수 없이 안에 만든 함수 ##
