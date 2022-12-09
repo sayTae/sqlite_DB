@@ -241,14 +241,14 @@ while(True):
             break;
         
         else:
-            print("존재하지 않는 DB입니다.")
+            print("\n" +"존재하지 않는 DB입니다.")
             YESorNO = input("새로 생성 하시겠습니까? (Y/N): ")
             
             if YESorNO == 'Y' or YESorNO == 'y':
                 con = sqlite3.connect(f"C:/sqlite/{DB_Name}")
                 cur = con.cursor()
             else:
-                input("다시 입력해주세요. (Enter)")
+                input("다시 입력해주세요. (Enter)" + "\n")
                 continue;
             
     except: 
